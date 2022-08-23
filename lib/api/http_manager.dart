@@ -27,7 +27,7 @@ class HttpServ {
     };
     final payload = "q=Helloworld!&target=$from&source=$to";
     final url = Uri.parse(
-        "https://google-translate1.p.rapidapi.com/language/translate/v2");
+        "https://google-translate1.p.rapidapi.com/language/translate/v2/translate");
     final transResponse =
         await http.post(url, headers: myheaders, body: payload);
     print(transResponse.body);
