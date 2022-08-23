@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:translator_app/api/http_manager.dart';
+import 'package:translator_app/screens/screen_home.dart';
 
 import 'country_choose_button.dart';
 
@@ -13,9 +15,17 @@ class ChooseLanguageSection extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Expanded(
-          child: LanguageChooseButton(
-            title: 'Germany',
-            onPressed: () {},
+          child: ValueListenableBuilder(
+            valueListenable: fromLanguageNotifier,
+            builder: (context, value, child) {
+              return LanguageChooseButton(
+                title: value,
+                onPressed: () {
+                  // showLanguageBottomSheet(type.translateFrom, context);
+                  HttpServ().translateFromLanguage('he', 'en', 'es');
+                },
+              );
+            },
           ),
         ),
         Padding(
@@ -26,9 +36,16 @@ class ChooseLanguageSection extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: LanguageChooseButton(
-            title: 'India',
-            onPressed: () {},
+          child: ValueListenableBuilder(
+            valueListenable: toLanguageNotifier,
+            builder: (context, value, child) {
+              return LanguageChooseButton(
+                title: value,
+                onPressed: () {
+                  showLanguageBottomSheet(type.translateTo, context);
+                },
+              );
+            },
           ),
         ),
       ],

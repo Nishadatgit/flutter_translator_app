@@ -1,22 +1,11 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:translator_app/models/all_languges_model.dart';
 
-// class HttpDioService {
-//   Dio dio = Dio(BaseOptions(
-//       baseUrl: "https://google-translate1.p.rapidapi.com/language/translate/v2",
-//       connectTimeout: 5000,
-//       responseType: ResponseType.plain));
-
-//   void getLanguages() async {
-//     final response = await dio.post('/lanuguages');
-//     print(response.data);
-//   }
-// }
-
 class HttpServ {
+  //Get all languages
   void getLanguages() async {
     const headers = {
       'Accept-Encoding': "application/gzip",
@@ -28,6 +17,19 @@ class HttpServ {
     final response = await http.get(url, headers: headers);
     print(response.body);
     final jsonResponse = allLanguagesFromJson(response.body);
-    
+  }
+
+  //Translate text from lang
+  void translateFromLanguage(String text, String from, String to) async {
+    const myheaders = {
+      'X-RapidAPI-Key': '216987e692mshb1dc5227b1c5d59p178e80jsn6630e561787c',
+      'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com'
+    };
+    final payload = "q=Helloworld!&target=$from&source=$to";
+    final url = Uri.parse(
+        "https://google-translate1.p.rapidapi.com/language/translate/v2");
+    final transResponse =
+        await http.post(url, headers: myheaders, body: payload);
+    print(transResponse.body);
   }
 }
