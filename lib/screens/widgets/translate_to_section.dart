@@ -25,7 +25,12 @@ class TranslateToSection extends StatelessWidget {
                 'Translate To',
                 style: TextStyle(color: Colors.grey.withOpacity(0.5)),
               ),
-              const Text('(India)'),
+              ValueListenableBuilder(
+                valueListenable: toLanguageNotifier,
+                builder: (context, value, child) {
+                  return Text('($value)');
+                },
+              )
             ],
           ),
           kHeight20,

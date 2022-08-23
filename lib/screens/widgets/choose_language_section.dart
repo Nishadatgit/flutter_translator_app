@@ -21,8 +21,7 @@ class ChooseLanguageSection extends StatelessWidget {
               return LanguageChooseButton(
                 title: value,
                 onPressed: () {
-                  // showLanguageBottomSheet(type.translateFrom, context);
-                  HttpServ().translateFromLanguage('he', 'en', 'es');
+                  showLanguageBottomSheet(type.translateFrom, context);
                 },
               );
             },

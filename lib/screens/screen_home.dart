@@ -89,12 +89,13 @@ void showLanguageBottomSheet(type operatiotype, BuildContext context) {
                     Icons.search,
                     color: Colors.grey,
                     size: 25,
-                  )),
+                  ),
+                  hintText: 'Search for language',
+                  hintStyle: const TextStyle(color: Colors.white24)),
             ),
             kHeight20,
             const Text('All Languages'),
             kHeight10,
-            
             Expanded(
               child: ListView.builder(
                 itemCount: languages.length,

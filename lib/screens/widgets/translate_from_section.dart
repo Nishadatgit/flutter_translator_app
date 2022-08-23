@@ -25,7 +25,12 @@ class TranslateFromSection extends StatelessWidget {
                 'Translate From',
                 style: TextStyle(color: Colors.grey.withOpacity(0.5)),
               ),
-              const Text('(Germany)'),
+              ValueListenableBuilder(
+                valueListenable: fromLanguageNotifier,
+                builder: (context, value, child) {
+                  return Text('($value)');
+                },
+              )
             ],
           ),
           kHeight20,
