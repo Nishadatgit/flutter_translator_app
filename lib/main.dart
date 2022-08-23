@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-main() {
-  runApp(MyApp());
-}
+import 'screens/screen_home.dart';
 
+main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -11,7 +12,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromARGB(221, 23, 22, 22),
+        primarySwatch: Colors.grey,
+        textTheme: const TextTheme(
+          bodyText1: TextStyle(color: Colors.white),
+          bodyText2: TextStyle(color: Colors.white),
+        ),
+      ),
+      home:  MyHome(),
     );
   }
 }
+
+const api = "https://google-translate1.p.rapidapi.com/language/translate/v2";
