@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:translator_app/api/http_manager.dart';
 import 'package:translator_app/api/my_data.dart';
 import 'package:translator_app/constants/heights.dart';
+import 'package:translator_app/controllers/all_languages_controller.dart';
 
 import 'widgets/choose_language_section.dart';
 import 'widgets/translate_from_section.dart';
@@ -15,7 +18,8 @@ enum type { translateFrom, translateTo }
 
 class MyHome extends StatelessWidget {
   MyHome({super.key});
-
+  AllLanguagesController allLanguagesController =
+      Get.put(AllLanguagesController());
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -30,17 +34,23 @@ class MyHome extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
-                'Text Translation',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.white),
+              Obx(
+                () => allLanguagesController.allLanguages.isNotEmpty
+                    ? Text(
+                        allLanguagesController.allLanguages
+                            .toString()
+                            .toString(),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 20,
+                            color: Colors.white),
+                      )
+                    : Text('bla'),
               ),
               kHeight10,
               Divider(color: Colors.grey.withOpacity(0.4)),
               kHeight10,
-              const ChooseLanguageSection(),
+              ChooseLanguageSection(),
               kHeight20,
               const TranslateFromSection(),
               kHeight20,

@@ -1,57 +1,61 @@
 // To parse this JSON data, do
 //
-//     final allLanguages = allLanguagesFromJson(jsonString);
+//     final allLanguagesModel = allLanguagesModelFromJson(jsonString);
 
 import 'dart:convert';
 
-AllLanguages allLanguagesFromJson(String str) => AllLanguages.fromJson(json.decode(str));
+AllLanguagesModel allLanguagesModelFromJson(String str) =>
+    AllLanguagesModel.fromJson(json.decode(str));
 
-String allLanguagesToJson(AllLanguages data) => json.encode(data.toJson());
+String allLanguagesModelToJson(AllLanguagesModel data) =>
+    json.encode(data.toJson());
 
-class AllLanguages {
-    AllLanguages({
-        this.data,
-    });
+class AllLanguagesModel {
+  AllLanguagesModel({
+    required this.data,
+  });
 
-    Data? data;
+  Data data;
 
-    factory AllLanguages.fromJson(Map<String, dynamic> json) => AllLanguages(
+  factory AllLanguagesModel.fromJson(Map<String, dynamic> json) =>
+      AllLanguagesModel(
         data: Data.fromJson(json["data"]),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
-        "data": data!.toJson(),
-    };
+  Map<String, dynamic> toJson() => {
+        "data": data.toJson(),
+      };
 }
 
 class Data {
-    Data({
-        this.languages,
-    });
+  Data({
+    required this.languages,
+  });
 
-    List<Language>? languages;
+  List<Language> languages;
 
-    factory Data.fromJson(Map<String, dynamic> json) => Data(
-        languages: List<Language>.from(json["languages"].map((x) => Language.fromJson(x))),
-    );
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+        languages: List<Language>.from(
+            json["languages"].map((x) => Language.fromJson(x))),
+      );
 
-    Map<String, dynamic> toJson() => {
-        "languages": List<dynamic>.from(languages!.map((x) => x.toJson())),
-    };
+  Map<String, dynamic> toJson() => {
+        "languages": List<dynamic>.from(languages.map((x) => x.toJson())),
+      };
 }
 
 class Language {
-    Language({
-        this.language,
-    });
+  Language({
+    required this.language,
+  });
 
-    String? language;
+  String language;
 
-    factory Language.fromJson(Map<String, dynamic> json) => Language(
+  factory Language.fromJson(Map<String, dynamic> json) => Language(
         language: json["language"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "language": language,
-    };
+      };
 }
