@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
+import 'package:get/get.dart';
 
 import 'screens/screen_home.dart';
 
@@ -11,7 +13,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      localizationsDelegates: const[
+        LocaleNamesLocalizationsDelegate()
+      ],
       theme: ThemeData(
         scaffoldBackgroundColor: const Color.fromARGB(221, 23, 22, 22),
         primarySwatch: Colors.grey,
@@ -20,7 +25,7 @@ class MyApp extends StatelessWidget {
           bodyText2: TextStyle(color: Colors.white),
         ),
       ),
-      home:  MyHome(),
+      home: MyHome(),
     );
   }
 }

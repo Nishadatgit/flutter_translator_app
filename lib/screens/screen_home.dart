@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:get/get.dart';
-import 'package:translator_app/api/http_manager.dart';
-import 'package:translator_app/api/my_data.dart';
 import 'package:translator_app/constants/heights.dart';
 import 'package:translator_app/controllers/all_languages_controller.dart';
-
 import 'widgets/choose_language_section.dart';
 import 'widgets/translate_from_section.dart';
 import 'widgets/translate_to_section.dart';
 
 final TextEditingController fromController = TextEditingController();
 final TextEditingController toController = TextEditingController();
-final fromLanguageNotifier = ValueNotifier('English');
-final toLanguageNotifier = ValueNotifier('Malayalam');
+final fromLanguageNotifier = ValueNotifier('Select a language');
+final toLanguageNotifier = ValueNotifier('Select a language');
 
-enum type { translateFrom, translateTo }
+enum Type { translateFrom, translateTo }
 
 class MyHome extends StatelessWidget {
   MyHome({super.key});
-  AllLanguagesController allLanguagesController =
+  final AllLanguagesController allLanguagesController =
       Get.put(AllLanguagesController());
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -34,23 +33,17 @@ class MyHome extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Obx(
-                () => allLanguagesController.allLanguages.isNotEmpty
-                    ? Text(
-                        allLanguagesController.allLanguages
-                            .toString()
-                            .toString(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 20,
-                            color: Colors.white),
-                      )
-                    : Text('bla'),
+              const Text(
+                'Hello',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 20,
+                    color: Colors.white),
               ),
               kHeight10,
               Divider(color: Colors.grey.withOpacity(0.4)),
               kHeight10,
-              ChooseLanguageSection(),
+              const ChooseLanguageSection(),
               kHeight20,
               const TranslateFromSection(),
               kHeight20,
@@ -63,10 +56,11 @@ class MyHome extends StatelessWidget {
   }
 }
 
-void showLanguageBottomSheet(type operatiotype, BuildContext context) {
+void showLanguageBottomSheet(Type operatiotype, BuildContext context) {
   showModalBottomSheet(
     context: context,
     builder: (context) {
+      final languageController = Get.find<AllLanguagesController>();
       return Container(
         padding: const EdgeInsets.all(20),
         height: 600,
@@ -74,7 +68,7 @@ void showLanguageBottomSheet(type operatiotype, BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              operatiotype == type.translateFrom ? 'From' : 'To',
+              operatiotype == Type.translateFrom ? 'From' : 'To',
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -107,39 +101,54 @@ void showLanguageBottomSheet(type operatiotype, BuildContext context) {
             const Text('All Languages'),
             kHeight10,
             Expanded(
-              child: ListView.builder(
-                itemCount: languages.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: InkWell(
-                      onTap: () {
-                        if (operatiotype == type.translateFrom) {
-                          fromLanguageNotifier.value = languages[index];
-                          Navigator.of(context).pop();
-                        } else {
-                          toLanguageNotifier.value = languages[index];
-                          Navigator.of(context).pop();
-                        }
-                      },
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        tileColor: Colors.black26,
-                        title: Text(
-                          languages[index],
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.accents[index],
-                        ),
+                child: ListView.builder(
+              itemCount: languageController.count.value,
+              itemBuilder: (context, index) {
+                if (getLocalName(
+                        context,
+                        languageController
+                            .allLanguages.data!.languages[index].language) ==
+                    null) {
+                  return const SizedBox.shrink();
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5),
+                  child: InkWell(
+                    onTap: () {
+                      if (operatiotype == Type.translateFrom) {
+                        Navigator.of(context).pop();
+                        fromLanguageNotifier.value = getLocalName(
+                            context,
+                            languageController
+                                .allLanguages.data!.languages[index].language)!;
+                      } else {
+                        toLanguageNotifier.value = getLocalName(
+                            context,
+                            languageController
+                                .allLanguages.data!.languages[index].language)!;
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      tileColor: Colors.black26,
+                      title: Text(
+                        getLocalName(
+                            context,
+                            languageController
+                                .allLanguages.data!.languages[index].language)!,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.accents[index % 3],
                       ),
                     ),
-                  );
-                },
-              ),
-            )
+                  ),
+                );
+              },
+            )),
           ],
         ),
       );
@@ -147,4 +156,8 @@ void showLanguageBottomSheet(type operatiotype, BuildContext context) {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     backgroundColor: Colors.grey[900],
   );
+}
+
+String? getLocalName(BuildContext context, String locale) {
+  return LocaleNames.of(context)!.nameOf(locale);
 }

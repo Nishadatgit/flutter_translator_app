@@ -1,19 +1,18 @@
-import 'dart:developer';
-
 import 'package:get/get.dart';
 import 'package:translator_app/api/http_manager.dart';
+import 'package:translator_app/constants/url.dart';
 import 'package:translator_app/models/all_languges_model.dart';
 
 class AllLanguagesController extends GetxController {
-  RxList<Language> allLanguages = RxList();
-
+  RxInt count = RxInt(0);
+  var allLanguages = AllLanguagesModel();
+  var isLoading = true.obs;
   getAllLanguages() async {
-    final response = await DioAPiService().getMethod(
-        'https://google-translate1.p.rapidapi.com/language/translate/v2/languages');
+    final languages = await DioService().getMthod('$baseUrl/languages');
 
-    response['languages'].forEach((element) {
-      allLanguages.add(Language.fromJson(element));
-    });
+    allLanguages = languages!;
+    isLoading = false.obs;
+    count.value = allLanguages.data!.languages.length;
   }
 
   @override

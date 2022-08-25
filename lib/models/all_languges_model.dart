@@ -4,18 +4,15 @@
 
 import 'dart:convert';
 
-AllLanguagesModel allLanguagesModelFromJson(String str) =>
-    AllLanguagesModel.fromJson(json.decode(str));
-
 String allLanguagesModelToJson(AllLanguagesModel data) =>
     json.encode(data.toJson());
 
 class AllLanguagesModel {
   AllLanguagesModel({
-    required this.data,
+     this.data,
   });
 
-  Data data;
+  Data? data;
 
   factory AllLanguagesModel.fromJson(Map<String, dynamic> json) =>
       AllLanguagesModel(
@@ -23,7 +20,7 @@ class AllLanguagesModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "data": data.toJson(),
+        "data": data!.toJson(),
       };
 }
 
