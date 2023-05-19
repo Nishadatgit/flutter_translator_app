@@ -14,15 +14,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      localizationsDelegates: const[
-        LocaleNamesLocalizationsDelegate()
-      ],
+      localizationsDelegates: const [LocaleNamesLocalizationsDelegate()],
       theme: ThemeData(
+        useMaterial3: true,
         scaffoldBackgroundColor: const Color.fromARGB(221, 23, 22, 22),
         primarySwatch: Colors.grey,
-        textTheme: const TextTheme(
-          bodyText1: TextStyle(color: Colors.white),
-          bodyText2: TextStyle(color: Colors.white),
+        textTheme:const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white),
         ),
       ),
       home: MyHome(),

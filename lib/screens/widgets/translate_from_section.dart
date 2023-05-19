@@ -1,12 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:translator_app/api/dio_service.dart';
+import 'package:translator_app/controllers/all_languages_controller.dart';
 
 import '../../constants/heights.dart';
 import '../screen_home.dart';
 
 class TranslateFromSection extends StatelessWidget {
-  const TranslateFromSection({
+  TranslateFromSection({
     Key? key,
   }) : super(key: key);
+  final languageController = Get.find<AllLanguagesController>();
+  Timer? _debounce;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +33,9 @@ class TranslateFromSection extends StatelessWidget {
                 style: TextStyle(color: Colors.grey.withOpacity(0.5)),
               ),
               ValueListenableBuilder(
-                valueListenable: fromLanguageNotifier,
+                valueListenable: languageController.fromLanguageNotifier,
                 builder: (context, value, child) {
-                  return Text('($value)');
+                  return Text(value != null ? '(${value.fullname})' : '');
                 },
               )
             ],
@@ -37,20 +44,21 @@ class TranslateFromSection extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
               child: TextField(
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
+                style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
                 controller: fromController,
                 decoration: const InputDecoration(
                   hintStyle: TextStyle(
                     color: Colors.grey,
                   ),
                 ),
+                onChanged: (value) {
+                  if (_debounce?.isActive ?? false) _debounce?.cancel();
+                  _debounce = Timer(const Duration(milliseconds: 500), () {
+                    translate(fromController.text);
+                  });
+                },
                 maxLines: 10,
                 maxLength: 1200,
               ),
@@ -59,5 +67,12 @@ class TranslateFromSection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void translate(String text) {
+    if (languageController.fromLanguageNotifier.value == null || languageController.toLanguageNotifier.value == null) {
+      return;
+    }
+    languageController.translateText(text);
   }
 }

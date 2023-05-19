@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:translator_app/controllers/all_languages_controller.dart';
 import 'package:translator_app/screens/screen_home.dart';
 
 import '../../constants/heights.dart';
 
 class TranslateToSection extends StatelessWidget {
-  const TranslateToSection({
+  TranslateToSection({
     Key? key,
   }) : super(key: key);
-
+  final languageController = Get.find<AllLanguagesController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,9 +28,9 @@ class TranslateToSection extends StatelessWidget {
                 style: TextStyle(color: Colors.grey.withOpacity(0.5)),
               ),
               ValueListenableBuilder(
-                valueListenable: toLanguageNotifier,
+                valueListenable: languageController.toLanguageNotifier,
                 builder: (context, value, child) {
-                  return Text('($value)');
+                  return Text(value != null ? '(${value.fullname})' : '');
                 },
               )
             ],
@@ -37,15 +39,11 @@ class TranslateToSection extends StatelessWidget {
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(10)),
+              decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
               child: TextField(
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
-                controller: toController,
+                readOnly: true,
+                style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                controller: languageController. toController,
                 decoration: const InputDecoration(
                   hintStyle: TextStyle(
                     color: Colors.grey,

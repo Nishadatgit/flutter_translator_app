@@ -3,21 +3,19 @@ import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:get/get.dart';
 import 'package:translator_app/constants/heights.dart';
 import 'package:translator_app/controllers/all_languages_controller.dart';
+import 'package:translator_app/models/language_model.dart';
 import 'widgets/choose_language_section.dart';
 import 'widgets/translate_from_section.dart';
 import 'widgets/translate_to_section.dart';
 
 final TextEditingController fromController = TextEditingController();
-final TextEditingController toController = TextEditingController();
-final fromLanguageNotifier = ValueNotifier('Select a language');
-final toLanguageNotifier = ValueNotifier('Select a language');
+
 
 enum Type { translateFrom, translateTo }
 
 class MyHome extends StatelessWidget {
   MyHome({super.key});
-  final AllLanguagesController allLanguagesController =
-      Get.put(AllLanguagesController());
+  final AllLanguagesController allLanguagesController = Get.put(AllLanguagesController());
 
   @override
   Widget build(BuildContext context) {
@@ -34,20 +32,17 @@ class MyHome extends StatelessWidget {
                 height: 10,
               ),
               const Text(
-                'Hello',
-                style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 20,
-                    color: Colors.white),
+                'Text Translation',
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20, color: Colors.white),
               ),
               kHeight10,
               Divider(color: Colors.grey.withOpacity(0.4)),
               kHeight10,
-              const ChooseLanguageSection(),
+              ChooseLanguageSection(),
               kHeight20,
-              const TranslateFromSection(),
+              TranslateFromSection(),
               kHeight20,
-              const TranslateToSection()
+              TranslateToSection()
             ],
           ),
         ),
@@ -58,12 +53,16 @@ class MyHome extends StatelessWidget {
 
 void showLanguageBottomSheet(Type operatiotype, BuildContext context) {
   showModalBottomSheet(
+    isScrollControlled: true,
+    elevation: 5,
+    constraints: BoxConstraints.tight(Size.fromHeight(700)),
+    barrierColor: Colors.transparent.withOpacity(.5),
+    useSafeArea: true,
     context: context,
     builder: (context) {
       final languageController = Get.find<AllLanguagesController>();
-      return Container(
+      return Padding(
         padding: const EdgeInsets.all(20),
-        height: 600,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -87,8 +86,7 @@ void showLanguageBottomSheet(Type operatiotype, BuildContext context) {
                   ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
-                      borderSide:
-                          BorderSide(color: Colors.grey.withOpacity(0.3))),
+                      borderSide: BorderSide(color: Colors.grey.withOpacity(0.3))),
                   prefixIcon: const Icon(
                     Icons.search,
                     color: Colors.grey,
@@ -104,45 +102,36 @@ void showLanguageBottomSheet(Type operatiotype, BuildContext context) {
                 child: ListView.builder(
               itemCount: languageController.count.value,
               itemBuilder: (context, index) {
-                if (getLocalName(
-                        context,
-                        languageController
-                            .allLanguages.data!.languages[index].language) ==
-                    null) {
+                if (getLocalName(context, languageController.allLanguages.data!.languages[index].language) == null) {
                   return const SizedBox.shrink();
                 }
+                final item = CustomLanguage(
+                    fullname: getLocalName(context, languageController.allLanguages.data!.languages[index].language)!,
+                    shortName: languageController.allLanguages.data!.languages[index].language);
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 5),
                   child: InkWell(
                     onTap: () {
                       if (operatiotype == Type.translateFrom) {
                         Navigator.of(context).pop();
-                        fromLanguageNotifier.value = getLocalName(
-                            context,
-                            languageController
-                                .allLanguages.data!.languages[index].language)!;
+                        languageController.fromLanguageNotifier.value = item;
                       } else {
-                        toLanguageNotifier.value = getLocalName(
-                            context,
-                            languageController
-                                .allLanguages.data!.languages[index].language)!;
+                        languageController.toLanguageNotifier.value = item;
                         Navigator.of(context).pop();
                       }
                     },
                     child: ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20)),
-                      tileColor: Colors.black26,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       title: Text(
-                        getLocalName(
-                            context,
-                            languageController
-                                .allLanguages.data!.languages[index].language)!,
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                     item.fullname,
+                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       leading: CircleAvatar(
                         backgroundColor: Colors.accents[index % 3],
+                        child: Text(
+                          item.shortName.toUpperCase(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ),
