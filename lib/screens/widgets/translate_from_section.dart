@@ -47,7 +47,7 @@ class TranslateFromSection extends StatelessWidget {
               decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
               child: TextField(
                 style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-                controller: fromController,
+                controller: languageController.fromController,
                 decoration: const InputDecoration(
                   hintStyle: TextStyle(
                     color: Colors.grey,
@@ -56,7 +56,7 @@ class TranslateFromSection extends StatelessWidget {
                 onChanged: (value) {
                   if (_debounce?.isActive ?? false) _debounce?.cancel();
                   _debounce = Timer(const Duration(milliseconds: 500), () {
-                    translate(fromController.text);
+                    translate(languageController.fromController.text);
                   });
                 },
                 maxLines: 10,

@@ -8,9 +8,6 @@ import 'widgets/choose_language_section.dart';
 import 'widgets/translate_from_section.dart';
 import 'widgets/translate_to_section.dart';
 
-final TextEditingController fromController = TextEditingController();
-
-
 enum Type { translateFrom, translateTo }
 
 class MyHome extends StatelessWidget {
@@ -24,27 +21,22 @@ class MyHome extends StatelessWidget {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        body: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            children: [
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Text Translation',
-                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20, color: Colors.white),
-              ),
-              kHeight10,
-              Divider(color: Colors.grey.withOpacity(0.4)),
-              kHeight10,
-              ChooseLanguageSection(),
-              kHeight20,
-              TranslateFromSection(),
-              kHeight20,
-              TranslateToSection()
-            ],
+        appBar: AppBar(
+          title: const Text(
+            'Text Translation',
+            style: TextStyle(fontWeight: FontWeight.w400, fontSize: 20, color: Colors.white),
           ),
+        ),
+        body: ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          children: [
+            kHeight10,
+            ChooseLanguageSection(),
+            kHeight20,
+            TranslateFromSection(),
+            kHeight20,
+            TranslateToSection()
+          ],
         ),
       ),
     );
@@ -117,13 +109,18 @@ void showLanguageBottomSheet(Type operatiotype, BuildContext context) {
                         languageController.fromLanguageNotifier.value = item;
                       } else {
                         languageController.toLanguageNotifier.value = item;
+                        if (languageController.fromController.text.isNotEmpty) {
+                          if (languageController.fromLanguageNotifier.value != null) {
+                            languageController.translateText(languageController.fromController.text);
+                          }
+                        }
                         Navigator.of(context).pop();
                       }
                     },
                     child: ListTile(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       title: Text(
-                     item.fullname,
+                        item.fullname,
                         style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       leading: CircleAvatar(

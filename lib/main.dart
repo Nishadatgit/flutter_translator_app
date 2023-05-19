@@ -17,9 +17,10 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: const [LocaleNamesLocalizationsDelegate()],
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color.fromARGB(221, 23, 22, 22),
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.black54),
+        scaffoldBackgroundColor: Colors.black45,
         primarySwatch: Colors.grey,
-        textTheme:const TextTheme(
+        textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.white),
           bodyMedium: TextStyle(color: Colors.white),
         ),

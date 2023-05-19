@@ -10,6 +10,7 @@ class AllLanguagesController extends GetxController {
   RxInt count = RxInt(0);
   var allLanguages = AllLanguagesModel();
   final TextEditingController toController = TextEditingController();
+  final TextEditingController fromController = TextEditingController();
   var isLoading = true.obs;
   final fromLanguageNotifier = ValueNotifier<CustomLanguage?>(null);
   final toLanguageNotifier = ValueNotifier<CustomLanguage?>(null);
